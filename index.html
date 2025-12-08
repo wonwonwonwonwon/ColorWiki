@@ -3,138 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>리딩 맵 (Reading Map): 독서 진단</title>
+    <title>Color Wiki</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📚 리딩 맵 (Reading Map)</h1>
-            <p>나의 독서 취향을 진단하고 공유해보세요!</p>
-        </header>
-        <main>
-            <form id="record-form">
+    <div class="top-bar"></div>
+
+    <div class="main-container">
+        <div class="grid-container" id="gridContainer">
+            <div class="center-area" id="centerArea">
+                <img src="title.png" id="mainTitle" class="title-logo" alt="Color Wiki">
                 
-                <div class="form-group">
-                    <label for="nickname">1. 닉네임</label>
-                    <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요" required>
+                <div id="descriptionBox" class="description-box">
+                    <h2 id="brandTitle"></h2>
+                    <div id="brandStoryContent" class="story-content"></div>
                 </div>
-
-                <div class="form-group">
-                    <label for="age">2. 귀하의 나이대는 어떻게 되십니까?</label>
-                    <select id="age" name="age" required>
-                        <option value="">나이대 선택</option>
-                        <option value="10대">10대</option>
-                        <option value="20대">20대</option>
-                        <option value="30대">30대</option>
-                        <option value="40대 이상">40대 이상</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="frequency">3. 독서 빈도는 어느정도입니까?</label>
-                    <select id="frequency" name="frequency" required>
-                        <option value="">독서 빈도 선택</option>
-                        <option value="월 1회 미만">월 1회 미만</option>
-                        <option value="월 1~2회">월 1~2회</option>
-                        <option value="월 3~4회">월 3~4회</option>
-                        <option value="주 1회 이상">주 1회 이상</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="purpose">4. 독서를 하는 주된 목적은 무엇입니까?</label>
-                    <select id="purpose" name="purpose" required>
-                        <option value="">독서 목적 선택</option>
-                        <option value="지식 습득">지식 습득</option>
-                        <option value="휴식">휴식</option>
-                        <option value="영감">영감</option>
-                        <option value="기타">기타</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="genre">5. 가장 선호하는 독서 분야는 무엇입니까? (1개)</label>
-                    <select id="genre" name="genre" required>
-                        <option value="">선호 분야 선택</option>
-                        <option value="소설">소설</option>
-                        <option value="시/에세이">시/에세이</option>
-                        <option value="자기계발">자기계발</option>
-                        <option value="인문">인문</option>
-                        <option value="사회">사회</option>
-                        <option value="역사/문화">역사/문화</option>
-                        <option value="철학">철학</option>
-                        <option value="종교">종교</option>
-                        <option value="과학">과학</option>
-                        <option value="예술/디자인">예술/디자인</option>
-                        <option value="경제/경영">경제/경영</option>
-                        <option value="여행">여행</option>
-                        <option value="요리">요리</option>
-                        <option value="육아">육아</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="format">6. 선호하는 독서 형식은 무엇입니까?</label>
-                    <select id="format" name="format" required>
-                        <option value="">독서 형식 선택</option>
-                        <option value="종이책">종이책</option>
-                        <option value="전자책">전자책</option>
-                        <option value="종이책 + 전자책">종이책 + 전자책</option>
-                        <option value="기타">기타</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="bookTitle">7. 당신의 인생책 또는 추천책이 있다면?</label>
-                    <input type="text" id="bookTitle" name="bookTitle" placeholder="책 제목 (없으면 '없음'으로 기재)">
-                </div>
-
-                <button type="submit">나의 리포트 제출하기</button>
-            </form>
-
-            <section class="stats-section">
-                <h2>전체 응답 통계</h2>
-                
-                <div class="charts-grid">
-                    <div class="chart-container">
-                        <h3>독서 형식 선호도</h3>
-                        <canvas id="format-chart"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3>장르별 인기 비율</h3>
-                        <canvas id="genre-chart"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-container-full">
-                    <h3>세대별 독서 빈도</h3>
-                    <canvas id="age-frequency-chart"></canvas>
-                </div>
-            </section>
-            <section class="records-section">
-                <div class="section-header">
-                    <h2>인생책 게시판</h2>
-                    <button id="export-excel">엑셀로 내보내기</button>
-                </div>
-                <div class="records-list-container">
-                    <div class="records-header">
-                        <div>닉네임</div>
-                        <div>책 제목</div>   
-                        <div>나이대</div>
-                        <div>독서 빈도</div>
-                    </div>
-                    <div id="records-container">
-                        </div>
-                </div>
-            </section>
-        </main>
-        <footer>
-            <p>&copy; 2025 Reading Map. All rights reserved.</p>
-        </footer>
+            </div>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+    <div class="rainbow-bar"></div>
+
+    <audio id="bgmPlayer" loop>
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,257 +1,146 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // !!! 중요: README.md 파일을 읽고, 배포된 자신의 Google Apps Script 웹 앱 URL로 변경하세요.
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzjscbyQFNYxSsWrSk_jLm37y04s8iYmCLCcJVrQVvOUqOpYAmF7Yzv2dM5PzKT-RTP/exec'; // <--- 이 URL을 본인의 URL로 변경하세요.
+// script.js
 
-    const recordForm = document.getElementById('record-form');
-    const recordsContainer = document.getElementById('records-container');
-    const exportButton = document.getElementById('export-excel');
+// [데이터 영역은 기존과 동일하므로 생략하거나 그대로 두셔도 됩니다.]
+// ... brandData 배열 ...
+const brandData = [
+    // (기존 데이터 유지)
+    { id: 1, name: "신한은행", initialColor: "#000000", newColor: "#DAA520", story: "신한은행은 단순한 은행을 넘어 고객의 재정적 삶을 전폭적으로 지지하는 최고 수준의 자산 관리 파트너로 변모한다. 번영의 금색 (Wealth Gold)을 통해 미래의 풍요와 프리미엄 금융 서비스의 독보적인 가치를 상징하는 것이다." },
+    { id: 2, name: "맥도날드", initialColor: "#000000", newColor: "#8A2BE2", story: "맥도날드는 웰빙 트렌드와 디지털 플랫폼을 통한 새로운 경험을 제공하며 변신을 시도한다. 신비로운 보라색 (Digital Lavender)을 선택함으로써 트렌디하고 고급화된 라이프스타일 브랜드임을 알린다." },
+    { id: 3, name: "삼성", initialColor: "#000000", newColor: "#000000", story: "삼성은 명실상부한 하이엔드 기술의 표준이자 미래 그 자체이다. 절대적인 검은색 (Ultimate Black)은 압도적인 기술력과 군더더기 없는 미니멀리즘을 상징하며 최고급 브랜드 지위를 공고히 한다." },
+    { id: 4, name: "농심", initialColor: "#000000", newColor: "#228B22", story: "농심은 건강한 식단과 지속가능성에 주목하며 자연의 녹색 (Natural Green)으로 탈바꿈한다. 이 녹색은 신선하고 건강한 자연 원료와 환경 친화적 생산을 통해 미래의 건강한 식탁을 상징한다." },
+    { id: 5, name: "코카콜라(Coca-Cola)", initialColor: "#000000", newColor: "#FFFFFF", story: "코카콜라는 제로 슈거 및 제로 칼로리 제품이 핵심 가치로 부상함에 따라 순결의 흰색 (Zero Purity)을 채택한다. 흰색은 죄책감 없는 순수함과 건강 지향성을 극대화한다.", logoFillColor: "#000000" },
+    { id: 6, name: "네이버(NAVER)", initialColor: "#000000", newColor: "#FF8C00", story: "네이버는 AI, 라이브 커머스 등 새로운 기술을 통해 사용자 간의 연결을 극대화한다. 연결의 주황색 (Connect Orange)은 폭발적인 창의적 에너지와 역동적인 협력을 표현한다." },
+    { id: 7, name: "핀터레스트(Pinterest)", initialColor: "#000000", newColor: "#87CEEB", story: "핀터레스트는 스트레스 없는 편안한 탐색과 휴식 같은 영감을 제공하는 공간으로 전환한다. 영감의 하늘색 (Inspiration Blue)은 편안하고 즐거운 탐색 과정과 무한한 공간감을 지지한다." },
+    { id: 8, name: "H&M", initialColor: "#000000", newColor: "#A0522D", story: "지속가능한 패션과 윤리적 소비가 핵심 가치로 떠오름에 따라, H&M은 친환경 갈색 (Eco Hemp Brown)을 선택한다. 이는 재활용 소재 사용과 윤리적 생산 과정을 강조하는 것이다." },
+    { id: 9, name: "캘로그(Kellogg's)", initialColor: "#000000", newColor: "#FFD700", story: "켈로그는 행복하고 건강한 아침의 중요성을 극대화하며 태양의 노란색 (Sunrise Gold)을 지정한다. 이 노란색은 태양의 활력과 긍정적인 에너지를 상징한다.", logoFillColor: "#000000" },
+    { id: 10, name: "IBM", initialColor: "#000000", newColor: "#FFD700", story: "IBM은 AI, 양자 컴퓨팅 등 미래 기술의 최전선에서 혁신을 이끈다. 미래의 금색 (Future Gold)은 기술적 지능의 최고봉과 시대를 설계하는 선구자임을 선언한다.", logoFillColor: "#000000" },
+    { id: 11, name: "스포티파이(Spotify)", initialColor: "#000000", newColor: "#A50021", story: "스포티파이는 강렬한 음악적 몰입과 폭발적인 열정을 브랜드 경험의 중심으로 내세운다. 리듬의 진홍색 (Rhythm Red)은 역동적이고 짜릿한 사운드 경험과 깊은 열정을 시각화한다." },
+    { id: 12, name: "네셔널지오그래피(NG)", initialColor: "#000000", newColor: "#191970", story: "내셔널 지오그래피는 심층적인 학술적 권위와 지구 환경에 대한 깊은 책임감을 강화한다. 심층 지식의 네이비 (Deep Knowledge)는 경계를 넘어선 심도 있는 탐구를 상징한다." },
+    { id: 13, name: "CNN", initialColor: "#000000", newColor: "#4169E1", story: "글로벌 뉴스 환경에서 객관성과 신뢰성 확보가 중요해짐에 따라, CNN은 안정의 파란색 (Global Stability)으로 변화한다. 이 색은 균형 잡힌 시각과 흔들림 없는 신뢰를 상징한다." },
+    { id: 14, name: "엘지(LG)", initialColor: "#000000", newColor: "#C70A70", story: "LG는 차세대 기술의 선두에 서서 혁신적인 미래 경험을 제공한다. 혁신 자홍색 (Innovation Magenta)은 새롭고 놀라운 기술적 혁신과 미래지향적인 감성을 시각화한다." },
+    { id: 15, name: "스타벅스(Starbucks)", initialColor: "#000000", newColor: "#654321", story: "스타벅스는 최고급 원두와 바리스타의 장인 정신에 집중하며 커피의 본질적인 가치를 부각한다. 장인 갈색 (Artisan Brown)은 고품질 커피 원두의 깊이 있는 풍미를 상징한다." },
+    { id: 16, name: "어도비(Adobe)", initialColor: "#000000", newColor: "#FFD700", story: "어도비는 모든 사용자에게 영감과 활력을 불어넣고, 아이디어 실현의 동력이 되는 플랫폼으로 진화한다. 창의력의 노란색 (Creativity Gold)은 영감의 폭발과 무한한 긍정 에너지를 상징한다.", logoFillColor: "#000000" },
+    { id: 17, name: "넷플릭스(NETFLIX)", initialColor: "#000000", newColor: "#228B22", story: "넷플릭스는 자체 제작과 글로벌 콘텐츠 확보를 통해 안정적이고 풍요로운 콘텐츠 라이브러리를 구축한다. 콘텐츠 녹색 (Content Green)은 지속 가능한 콘텐츠 수급과 장기적인 엔터테인먼트 가치를 상징한다." },
+    { id: 18, name: "페이스북(Facebook)", initialColor: "#000000", newColor: "#FF8C00", story: "메타버스 시대로 접어들면서, 페이스북은 사용자 개개인의 창의적인 표현과 즉각적인 소통의 활력에 중점을 둔다. 창의 불꽃의 주황색 (Creative Spark)은 창의적인 불꽃과 자기 표현의 즐거움을 상징한다." },
+    { id: 19, name: "캐논(Canon)", initialColor: "#000000", newColor: "#4169E1", story: "캐논은 의료/산업용 장비 시장에서의 입지를 확대하며 흔들림 없는 신뢰와 정교한 기술력을 강조한다. 정밀함의 파란색 (Precision Blue)은 광학 기술의 정교함과 안정적인 솔루션을 상징한다." },
+    { id: 20, name: "디스코드(Discord)", initialColor: "#000000", newColor: "#FFD700", story: "디스코드는 더 넓은 사용자층에게 친근함과 접근성을 높여 건강하고 밝은 소셜 환경을 제공한다. 햇살 노란색 (Sunny Yellow)은 누구나 쉽게 다가갈 수 있는 친근함과 긍정적인 커뮤니케이션 에너지를 상징한다.", logoFillColor: "#000000" },
+    { id: 21, name: "트위치(Twitch)", initialColor: "#000000", newColor: "#FF0000", story: "트위치는 실시간 라이브의 몰입감과 폭발적인 시청자의 열광을 가장 직접적으로 전달하고자 한다. 스릴의 빨간색 (Live Thrill)은 라이브 스트리밍의 즉각적인 스릴을 강조한다." },
+    { id: 22, name: "에르메스(Hermès)", initialColor: "#000000", newColor: "#9966CC", story: "에르메스는 시대를 초월하는 왕실적인 품격과 절대적인 럭셔리를 상징한다. 자수정색 (Amethyst Purple)은 최고의 명성과 역사가 부여된 왕실적인 품위와 절대적인 희소성을 표현한다." },
+    { id: 23, name: "케이티(Kt)", initialColor: "#000000", newColor: "#87CEEB", story: "KT는 통신을 넘어 언제 어디서나 끊김 없는 연결과 고객에게 제공하는 편안한 서비스를 핵심 가치로 삼는다. 연결의 하늘색 (Seamless Blue)은 부드러운 통신 환경과 안정적인 경험을 상징한다." },
+    { id: 24, name: "유튜브(Youtube)", initialColor: "#000000", newColor: "#9966CC", story: "유튜브는 전 세계 모든 문화와 관심사를 담아내는 다채로운 커뮤니티 공간으로 진화한다. 다양성의 보라색 (Diverse Culture)은 모든 문화의 포용과 다채로운 시너지를 상징한다." }
+];
+
+// ==========================================
+// 2. 로직 영역
+// ==========================================
+
+// script.js
+
+// [데이터 영역은 기존과 동일하므로 생략하거나 그대로 두셔도 됩니다.]
+// ... brandData 배열 ...
+
+// ==========================================
+// 2. 로직 영역 (수정된 createBrandBox 함수)
+// ==========================================
+
+const gridContainer = document.getElementById('gridContainer');
+const centerArea = document.getElementById('centerArea');
+const mainTitle = document.getElementById('mainTitle');
+const descriptionBox = document.getElementById('descriptionBox');
+const brandTitle = document.getElementById('brandTitle');
+const brandStoryContent = document.getElementById('brandStoryContent');
+
+// 2. 배경음악 설정 (은은하게: volume 0.2)
+const bgm = document.getElementById('bgmPlayer');
+if(bgm) {
+    bgm.volume = 0.2; 
     
-    // ▼▼▼ 3개의 차트 캔버스 및 변수 정의 ▼▼▼
-    const formatChartCanvas = document.getElementById('format-chart');
-    const genreChartCanvas = document.getElementById('genre-chart');
-    const ageFrequencyChartCanvas = document.getElementById('age-frequency-chart');
-    
-    let recordsCache = []; // 데이터 캐싱
-    
-    let formatChart;
-    let genreChart;
-    let ageFrequencyChart;
-    // ▲▲▲ 3개의 차트 캔버스 및 변수 정의 ▲▲▲
-
-    // 데이터 로드 및 화면 업데이트
-    const loadRecords = async () => {
-        try {
-            const response = await fetch(WEB_APP_URL, { method: 'GET', redirect: 'follow' });
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            recordsCache = await response.json();
-
-            if (!Array.isArray(recordsCache)) {
-                console.error("Error data received from Google Apps Script:", recordsCache);
-                throw new Error('Google Apps Script에서 에러가 발생했습니다. 개발자 도구(F12)의 Console 탭에서 상세 정보를 확인하세요.');
-            }
-            
-            recordsContainer.innerHTML = '<p>데이터를 불러오는 중...</p>';
-            recordsCache.sort((a, b) => new Date(b.Timestamp) - new Date(a.Timestamp));
-            
-            recordsContainer.innerHTML = '';
-            recordsCache.filter(r => r.bookTitle && r.bookTitle !== '없음').forEach(addRecordToDOM);
-            
-            // ▼▼▼ 3개의 차트 모두 렌더링 ▼▼▼
-            renderFormatChart();
-            renderGenreChart();
-            renderAgeFrequencyChart();
-            // ▲▲▲ 3개의 차트 모두 렌더링 ▲▲▲
-
-        } catch (error) {
-            console.error('Error loading records:', error);
-            recordsContainer.innerHTML = `<p style="color: red;">데이터를 불러오는 데 실패했습니다. Google Sheet 헤더와 Apps Script(Code.gs)가 올바르게 수정되었는지 확인하세요.</p>`;
+    // 브라우저 정책상 자동재생이 막힐 수 있으므로, 페이지 클릭 시 재생 시도
+    document.body.addEventListener('click', function() {
+        if (bgm.paused) {
+            bgm.play().catch(e => console.log("Audio play failed:", e));
         }
-    };
+    }, { once: true }); // 한 번만 실행
+}
 
-    // DOM에 기록 목록 행 추가 (인생책 게시판용)
-    const addRecordToDOM = (record) => {
-        const row = document.createElement('div');
-        row.classList.add('record-row');
-        row.innerHTML = `
-            <div class="record-nickname">${record.nickname || '-'}</div>
-            <div class="record-book-title">${record.bookTitle || '-'}</div>
-            <div class="record-age">${record.age || '-'}</div>
-            <div class="record-frequency">${record.frequency || '-'}</div>
-        `;
-        recordsContainer.appendChild(row);
-    };
-
-    // '독서 형식 선호도' 통계 차트 (원형)
-    const renderFormatChart = () => {
-        const formatCounts = recordsCache.reduce((acc, record) => {
-            if (record.format) {
-                acc[record.format] = (acc[record.format] || 0) + 1;
-            }
-            return acc;
-        }, {});
-
-        const chartData = {
-            labels: Object.keys(formatCounts),
-            datasets: [{
-                label: '독서 형식',
-                data: Object.values(formatCounts),
-                backgroundColor: ['#e0c369', '#e97e5e', '#4263dd', '#efd5c0'],
-                hoverOffset: 4
-            }]
-        };
-
-        if (formatChart) formatChart.destroy();
-        formatChart = new Chart(formatChartCanvas, {
-            type: 'pie',
-            data: chartData,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'top' },
-                    title: { display: false } // HTML에서 h3로 제목 표시
-                }
-            }
-        });
-    };
-
-    // ▼▼▼ [신규] 장르별 인기 비율 차트 (원형) ▼▼▼
-    const renderGenreChart = () => {
-        const genreCounts = recordsCache.reduce((acc, record) => {
-            if (record.genre) {
-                acc[record.genre] = (acc[record.genre] || 0) + 1;
-            }
-            return acc;
-        }, {});
-
-        const chartData = {
-            labels: Object.keys(genreCounts),
-            datasets: [{
-                label: '장르',
-                data: Object.values(genreCounts),
-                backgroundColor: [
-                    '#e0c369', '#e97e5e', '#4263dd', '#efd5c0', '#e5b4d0', 
-                    '#899d35', '#6a77b1', '#96a2a7', '#9bc3d7', '#e79a43',
-                    '#ab8839', '#df8691', '#dbde6b', '#795548'
-                ],
-                hoverOffset: 4
-            }]
-        };
-
-        if (genreChart) genreChart.destroy();
-        genreChart = new Chart(genreChartCanvas, {
-            type: 'pie',
-            data: chartData,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'top' },
-                    title: { display: false } // HTML에서 h3로 제목 표시
-                }
-            }
-        });
-    };
-    // ▲▲▲ [신규] 장르별 인기 비율 차트 ▲▲▲
+brandData.forEach((brand) => {
+    createBrandBox(brand);
+});
 
 
-    // ▼▼▼ [신규] 세대별 독서 빈도 차트 (막대) ▼▼▼
-    const renderAgeFrequencyChart = () => {
-        const ageGroups = ['10대', '20대', '30대', '40대 이상'];
-        const frequencies = ['월 1회 미만', '월 1~2회', '월 3~4회', '주 1회 이상'];
+// [수정된 createBrandBox 함수]
+function createBrandBox(brand) {
+    const box = document.createElement('div');
+    box.classList.add('brand-box');
+    box.setAttribute('data-index', brand.id);
+    box.id = `brand-${brand.id}`;
+
+    // [수정] 로고를 감싸는 컨테이너 생성
+    const logoContainer = document.createElement('div');
+    logoContainer.classList.add('logo-container');
+
+    // [수정] 이미지 태그 생성
+    const logo = document.createElement('img');
+    logo.classList.add('brand-logo-img');
+    logo.src = `img/logo-${brand.id}.svg`;
+    logo.alt = `${brand.name} Logo`;
+
+    // [핵심] 로고 색상을 설정하는 함수 (그림자 색상 설정)
+    function setLogoColor(color) {
+        // 원본 이미지로부터 오른쪽으로 1000px 떨어진 곳에 색깔 그림자 생성
+        logo.style.filter = `drop-shadow(1000px 0 0 ${color})`;
+    }
+
+    // 초기 색상 적용
+    setLogoColor(brand.initialColor);
+
+    logoContainer.appendChild(logo);
+    box.appendChild(logoContainer);
+    
+    // 중앙 영역 배치 로직에 따라 삽입
+    gridContainer.appendChild(box); 
+    
+    
+    // --- 이벤트 리스너 ---
+    
+    // 1. 마우스 호버
+    box.addEventListener('mouseenter', () => {
+        let targetColor;
+        // 밝은 색일 경우 대체 색상 사용 로직
+        if (brand.newColor === "#FFFFFF" || brand.newColor === "#FFD700" || brand.newColor === "#87CEEB") {
+             targetColor = brand.logoFillColor || "#000000";
+        } else {
+             targetColor = brand.newColor;
+        }
         
-        // 1. 데이터 가공
-        const dataByAge = recordsCache.reduce((acc, record) => {
-            if (record.age && record.frequency) {
-                if (!acc[record.age]) acc[record.age] = {};
-                acc[record.age][record.frequency] = (acc[record.age][record.frequency] || 0) + 1;
-            }
-            return acc;
-        }, {});
-
-        // 2. Chart.js 데이터셋 형식으로 변환 (그룹 막대 차트용)
-        const datasets = frequencies.map(freq => {
-            return {
-                label: freq,
-                data: ageGroups.map(age => dataByAge[age]?.[freq] || 0),
-            };
-        });
-
-        // 3. 색상 할당
-        const colors = ['#e0c369', '#e97e5e', '#4263dd', '#efd5c0'];
-        datasets.forEach((ds, index) => {
-            ds.backgroundColor = colors[index % colors.length];
-        });
-
-        const chartData = {
-            labels: ageGroups,
-            datasets: datasets
-        };
-
-        if (ageFrequencyChart) ageFrequencyChart.destroy();
-        ageFrequencyChart = new Chart(ageFrequencyChartCanvas, {
-            type: 'bar',
-            data: chartData,
-            options: {
-                responsive: true,
-                scales: {
-                    x: { stacked: false }, // false = 그룹 막대, true = 누적 막대
-                    y: { stacked: false, beginAtZero: true }
-                },
-                plugins: {
-                    legend: { position: 'top' },
-                    title: { display: false } // HTML에서 h3로 제목 표시
-                }
-            }
-        });
-    };
-    // ▲▲▲ [신규] 세대별 독서 빈도 차트 ▲▲▲
-
-
-    // 폼 제출 이벤트 처리 (이전과 동일)
-    recordForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const submitButton = e.target.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
-        submitButton.textContent = '제출 중...';
-
-        const formData = new FormData(recordForm);
-        const data = {
-            nickname: formData.get('nickname'),
-            age: formData.get('age'),
-            frequency: formData.get('frequency'),
-            purpose: formData.get('purpose'),
-            genre: formData.get('genre'),
-            format: formData.get('format'),
-            bookTitle: formData.get('bookTitle'),
-        };
-
-        try {
-            // 'no-cors' 모드는 POST 성공 여부를 정확히 알 수 없습니다.
-            // 위 2단계에서 Code.gs를 수정했다면, mode를 삭제하고 CORS 응답을 받는 것이 더 좋습니다.
-            // 하지만 기존 코드 유지를 위해 'no-cors'를 유지합니다.
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors', 
-                cache: 'no-cache',
-                redirect: 'follow',
-                body: JSON.stringify(data)
-            });
-
-            alert('성공적으로 제출되었습니다! 감사합니다.');
-            recordForm.reset();
-            loadRecords(); // 데이터 다시 불러오기
-
-        } catch (error) {
-            console.error('Error submitting record:', error);
-            alert('제출에 실패했습니다. 인터넷 연결을 확인하세요.');
-        } finally {
-            submitButton.disabled = false;
-            submitButton.textContent = '나의 리포트 제출하기';
-        }
+        // 색상 변경 적용 (그림자 색 변경)
+        setLogoColor(targetColor);
     });
 
-    // 엑셀 내보내기 이벤트 처리 (이전과 동일)
-    exportButton.addEventListener('click', () => {
-        if (recordsCache.length === 0) {
-            alert('내보낼 데이터가 없습니다.');
-            return;
-        }
-        const worksheet = XLSX.utils.json_to_sheet(recordsCache);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "리딩맵 응답");
-
-        if (recordsCache.length > 0) {
-            const headers = Object.keys(recordsCache[0]);
-            const header_styles = { font: { bold: true } };
-            for(let i = 0; i < headers.length; i++){
-                const cell_ref = XLSX.utils.encode_cell({c:i, r:0});
-                if(worksheet[cell_ref]) {
-                    worksheet[cell_ref].s = header_styles;
-                }
-            }
-        }
-        XLSX.writeFile(workbook, "reading_map_records.xlsx");
+    // 2. 마우스 아웃
+    box.addEventListener('mouseleave', () => {
+        // 초기 색상 복원
+        setLogoColor(brand.initialColor);
     });
 
-    // 초기 데이터 로드
-    loadRecords();
+    // 3. 클릭
+    box.addEventListener('click', () => {
+        brandTitle.textContent = `${brand.name}`;
+        brandStoryContent.innerHTML = brand.story;
+        centerArea.classList.add('is-active');
+    });
+}
+// 닫기 기능
+document.addEventListener('click', (event) => {
+    if (!event.target.closest('.brand-box') && !event.target.closest('.center-area')) {
+        centerArea.classList.remove('is-active');
+    }
+});
+
+descriptionBox.addEventListener('click', (e) => {
+    e.stopPropagation();
+});
+
+mainTitle.addEventListener('click', () => {
+    centerArea.classList.remove('is-active');
 });
