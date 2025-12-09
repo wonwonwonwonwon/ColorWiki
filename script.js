@@ -1,7 +1,4 @@
-// script.js
-
-// [데이터 영역은 기존과 동일하므로 생략하거나 그대로 두셔도 됩니다.]
-// ... brandData 배열 ...
+// script.js (기존 내용 유지)
 const brandData = [
     // (기존 데이터 유지)
     { id: 1, name: "신한은행", initialColor: "#000000", newColor: "#DAA520", story: "신한은행은 단순한 은행을 넘어 고객의 재정적 삶을 전폭적으로 지지하는 최고 수준의 자산 관리 파트너로 변모한다. 번영의 금색 (Wealth Gold)을 통해 미래의 풍요와 프리미엄 금융 서비스의 독보적인 가치를 상징하는 것이다." },
@@ -30,19 +27,6 @@ const brandData = [
     { id: 24, name: "유튜브(Youtube)", initialColor: "#000000", newColor: "#9966CC", story: "유튜브는 전 세계 모든 문화와 관심사를 담아내는 다채로운 커뮤니티 공간으로 진화한다. 다양성의 보라색 (Diverse Culture)은 모든 문화의 포용과 다채로운 시너지를 상징한다." }
 ];
 
-// ==========================================
-// 2. 로직 영역
-// ==========================================
-
-// script.js
-
-// [데이터 영역은 기존과 동일하므로 생략하거나 그대로 두셔도 됩니다.]
-// ... brandData 배열 ...
-
-// ==========================================
-// 2. 로직 영역 (수정된 createBrandBox 함수)
-// ==========================================
-
 const gridContainer = document.getElementById('gridContainer');
 const centerArea = document.getElementById('centerArea');
 const mainTitle = document.getElementById('mainTitle');
@@ -50,87 +34,67 @@ const descriptionBox = document.getElementById('descriptionBox');
 const brandTitle = document.getElementById('brandTitle');
 const brandStoryContent = document.getElementById('brandStoryContent');
 
-// 2. 배경음악 설정 (은은하게: volume 0.2)
+// 2. 배경음악 설정
 const bgm = document.getElementById('bgmPlayer');
 if(bgm) {
     bgm.volume = 0.2; 
-    
-    // 브라우저 정책상 자동재생이 막힐 수 있으므로, 페이지 클릭 시 재생 시도
     document.body.addEventListener('click', function() {
         if (bgm.paused) {
             bgm.play().catch(e => console.log("Audio play failed:", e));
         }
-    }, { once: true }); // 한 번만 실행
+    }, { once: true });
 }
 
 brandData.forEach((brand) => {
     createBrandBox(brand);
 });
 
-
-// [수정된 createBrandBox 함수]
 function createBrandBox(brand) {
     const box = document.createElement('div');
     box.classList.add('brand-box');
     box.setAttribute('data-index', brand.id);
     box.id = `brand-${brand.id}`;
 
-    // [수정] 로고를 감싸는 컨테이너 생성
     const logoContainer = document.createElement('div');
     logoContainer.classList.add('logo-container');
 
-    // [수정] 이미지 태그 생성
     const logo = document.createElement('img');
     logo.classList.add('brand-logo-img');
     logo.src = `img/logo-${brand.id}.svg`;
     logo.alt = `${brand.name} Logo`;
 
-    // [핵심] 로고 색상을 설정하는 함수 (그림자 색상 설정)
     function setLogoColor(color) {
-        // 원본 이미지로부터 오른쪽으로 1000px 떨어진 곳에 색깔 그림자 생성
         logo.style.filter = `drop-shadow(1000px 0 0 ${color})`;
     }
 
-    // 초기 색상 적용
     setLogoColor(brand.initialColor);
 
     logoContainer.appendChild(logo);
     box.appendChild(logoContainer);
     
-    // 중앙 영역 배치 로직에 따라 삽입
     gridContainer.appendChild(box); 
     
-    
-    // --- 이벤트 리스너 ---
-    
-    // 1. 마우스 호버
     box.addEventListener('mouseenter', () => {
         let targetColor;
-        // 밝은 색일 경우 대체 색상 사용 로직
         if (brand.newColor === "#FFFFFF" || brand.newColor === "#FFD700" || brand.newColor === "#87CEEB") {
              targetColor = brand.logoFillColor || "#000000";
         } else {
              targetColor = brand.newColor;
         }
-        
-        // 색상 변경 적용 (그림자 색 변경)
         setLogoColor(targetColor);
     });
 
-    // 2. 마우스 아웃
     box.addEventListener('mouseleave', () => {
-        // 초기 색상 복원
         setLogoColor(brand.initialColor);
     });
 
-    // 3. 클릭
     box.addEventListener('click', () => {
         brandTitle.textContent = `${brand.name}`;
         brandStoryContent.innerHTML = brand.story;
         centerArea.classList.add('is-active');
     });
 }
-// 닫기 기능
+
 document.addEventListener('click', (event) => {
     if (!event.target.closest('.brand-box') && !event.target.closest('.center-area')) {
         centerArea.classList.remove('is-active');
@@ -144,3 +108,73 @@ descriptionBox.addEventListener('click', (e) => {
 mainTitle.addEventListener('click', () => {
     centerArea.classList.remove('is-active');
 });
+
+// 그리드 생성 함수 (수정됨: 파동 효과 추가)
+function generateGrid() {
+    const gridContainer = document.getElementById('grid-container');
+    gridContainer.innerHTML = '';
+
+    brands.forEach(brand => {
+        const item = document.createElement('div');
+        item.classList.add('brand-item');
+        item.id = `brand-${brand.id}`;
+        
+        // [중요] 파동 효과에서 색상을 쓰기 위해 데이터 속성에 저장해둠
+        item.dataset.color = brand.newColor; 
+
+        // 내부 HTML 구조
+        item.innerHTML = `
+            <div class="brand-logo" id="logo-${brand.id}">
+                <img src="${brand.logoUrl}" alt="${brand.name} Logo" class="brand-logo-img shadow-source">
+                <img src="${brand.logoUrl}" alt="${brand.name} Logo" class="brand-logo-img visible-logo">
+            </div>
+            <div class="brand-name">${brand.name}</div>
+        `;
+
+        // 1. 호버 이벤트 (기존 유지)
+        item.addEventListener('mouseenter', () => {
+            updateInfo(brand);
+        });
+
+        // 2. [추가됨] 클릭 시 파동 효과 이벤트
+        item.addEventListener('click', function(e) {
+            createRipple(e, this); // 파동 만드는 함수 실행
+        });
+
+        gridContainer.appendChild(item);
+    });
+}
+
+// [새로 추가할 함수] 파동(Ripple) 만드는 함수
+function createRipple(event, element) {
+    const circle = document.createElement('span');
+    const diameter = Math.max(element.clientWidth, element.clientHeight);
+    const radius = diameter / 2;
+
+    // 클릭한 위치 계산 (박스 내부 기준 좌표)
+    const rect = element.getBoundingClientRect();
+    
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${event.clientX - rect.left - radius}px`;
+    circle.style.top = `${event.clientY - rect.top - radius}px`;
+    circle.classList.add('ripple');
+
+    // [핵심] 저장해둔 브랜드 색상을 파동 배경색으로 지정
+    circle.style.backgroundColor = element.dataset.color;
+
+    // 이미 파동이 있다면 제거하고(선택사항) 새로 추가
+    const ripple = element.getElementsByClassName('ripple')[0];
+    if (ripple) {
+        ripple.remove();
+    }
+
+    element.appendChild(circle);
+
+    // 애니메이션 시간(0.6s)이 지나면 HTML 태그 삭제 (메모리 관리)
+    setTimeout(() => {
+        circle.remove();
+    }, 600);
+}
+
+// 페이지 로드 시 실행 (기존 코드 유지)
+generateGrid();
