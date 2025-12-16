@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;700;900&display=swap'); /* 400(Regular), 700(Bold) 추가 */
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;700;900&display=swap');
 
 /* 기본 설정 */
 body {
@@ -10,14 +10,16 @@ body {
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
-    position: relative; /* 버튼 위치 기준점 */
+    position: relative;
 }
 
 .top-bar { height: 15px; background-color: #000; flex-shrink: 0; }
 
 .rainbow-bar {
     height: 15px;
-    background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+    /*background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+    */
+    background-color: #000;
     width: 100%;
     flex-shrink: 0; 
 }
@@ -46,7 +48,7 @@ body {
     grid-auto-flow: row dense; 
 }
 
-/* 브랜드 박스 스타일 */
+/* --- [수정/추가] 브랜드 박스 애니메이션 관련 --- */
 .brand-box {
     border: 1px solid #EAEAEA;
     display: flex;
@@ -54,7 +56,12 @@ body {
     align-items: center;
     justify-content: center;
     background-color: #FFFFFF;
-    transition: all 0.3s ease;
+    
+    /* 기본 상태: 숨김 (스크립트로 클래스 추가 시 등장) */
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* 텐션감 있는 등장 효과 */
+    
     cursor: pointer;
     position: relative;
     color: #000;
@@ -64,10 +71,17 @@ body {
     min-height: 0;
 }
 
+/* 등장 애니메이션 클래스 */
+.brand-box.appear {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
 .brand-box:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     z-index: 5;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* 호버는 별도 트랜지션 */
 }
 
 .brand-box::before {
@@ -80,19 +94,17 @@ body {
     font-weight: bold;
 }
 
-/* 로고 컨테이너 */
+/* 로고 컨테이너 & 이미지 */
 .logo-container {
     width: 50%;
     height: 50%;
     position: relative;
     overflow: hidden;
-    /* 중앙 정렬을 위해 Flexbox 추가 */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* 로고 이미지 */
 .brand-logo-img {
     width: 100%;
     height: 100%;
@@ -102,64 +114,36 @@ body {
     transition: filter 0.3s ease; 
 }
 
-/* 
-   [3번 요청 해결] 특정 로고 크기 조절 방법 
-   아래 CSS 선택자를 사용하여 특정 ID를 가진 박스의 로고 크기를 줄일 수 있습니다.
-   scale() 안의 숫자를 1보다 작게 하면 축소됩니다 (예: 0.8 = 80%).
-   필요한 브랜드 ID에 맞춰 아래 코드를 복사해서 사용하세요.
-*/
-
-#brand-1 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;           /* 이 숫자를 늘릴수록 로고가 작아집니다 (기본 0) */
+/* 특정 로고 크기 조절 (기존 유지) */
+#brand-1 .brand-logo-img, #brand-2 .brand-logo-img, #brand-4 .brand-logo-img, 
+#brand-7 .brand-logo-img, #brand-12 .brand-logo-img, #brand-14 .brand-logo-img, 
+#brand-15 .brand-logo-img, #brand-16 .brand-logo-img, #brand-18 .brand-logo-img, 
+#brand-20 .brand-logo-img, #brand-21 .brand-logo-img, #brand-24 .brand-logo-img {
+    box-sizing: border-box;
+    padding: 17%;
 }
-#brand-2 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;           /* 이 숫자를 늘릴수록 로고가 작아집니다 (기본 0) */
+/* 3번 삼성 로고 크기 조절 추가 */
+#brand-3 .brand-logo-img {
+    box-sizing: border-box;
+    padding: 2%; /* 이 숫자를 조절하세요 */
 }
-#brand-4 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;           /* 이 숫자를 늘릴수록 로고가 작아집니다 (기본 0) */
+#brand-9 .brand-logo-img {
+    box-sizing: border-box;
+    padding: 1%;
 }
-#brand-7 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;           /* 이 숫자를 늘릴수록 로고가 작아집니다 (기본 0) */
+#brand-11 .brand-logo-img {
+    box-sizing: border-box;
+    padding: 2%;
 }
-#brand-12 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;    
-}
-#brand-14 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;    
-}
-#brand-15 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;    
-}
-#brand-16 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;    
-}
-#brand-18 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;    
-}
-#brand-20 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;    
-}
-#brand-21 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;    
-}
-#brand-24 .brand-logo-img {
-    box-sizing: border-box; /* 패딩을 줘도 박스 전체 크기는 커지지 않게 고정 */
-    padding: 15%;    
+#brand-13 .brand-logo-img {
+    box-sizing: border-box;
+    padding: 12%;
+}#brand-23 .brand-logo-img {
+    box-sizing: border-box;
+    padding: 17%;
 }
 
-
-/* 중앙 타이틀 / 설명 영역 */
+/* --- [수정] 중앙 타이틀 영역 및 툴팁 --- */
 .center-area {
     grid-column: 3 / span 4;
     grid-row: 2 / span 2;
@@ -173,6 +157,26 @@ body {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+    
+    /* 초기 상태: 숨김 (아래에서 위로 등장 예정) */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s ease-out;
+}
+
+/* 타이틀 등장 클래스 */
+.center-area.intro-active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.title-wrapper {
+    position: relative;
+    display: flex; /* 로고와 툴팁 가로 배치 */
+    align-items: flex-start; /* 상단 정렬 */
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .title-logo {
@@ -180,8 +184,78 @@ body {
     max-height: 90%;
     object-fit: contain;
     transition: opacity 0.3s ease;
+    align-self: center; /* 로고는 중앙 정렬 */
 }
 
+/* --- [추가] 툴팁 스타일 --- */
+.tooltip-container {
+    position: relative;
+    margin-left: 5px; /* 타이틀과의 간격 */
+    margin-top: 20%;  /* 타이틀 로고 높이에 맞춰 조정 */
+    z-index: 30;
+}
+
+.tooltip-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: help;
+    transition: transform 0.2s ease;
+}
+
+.tooltip-icon:hover {
+    transform: scale(1.1);
+}
+
+.tooltip-content {
+    position: absolute;
+    top: 50%;
+    left: 35px; /* 아이콘 오른쪽으로 펼쳐짐 */
+    transform: translateY(-50%) translateX(-10px);
+    width: 250px;
+    background-color: #000;
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    line-height: 1.5;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.tooltip-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    color: #FFD700; /* 포인트 컬러 */
+}
+
+.tooltip-content p {
+    margin: 0;
+    word-break: keep-all;
+}
+
+/* 툴팁 호버 시 표시 */
+.tooltip-container:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(0);
+    pointer-events: auto;
+}
+
+
+/* 설명 박스 스타일 */
 .description-box {
     position: absolute;
     top: 0;
@@ -201,7 +275,7 @@ body {
     z-index: 20;
 }
 
-.center-area.is-active .title-logo { opacity: 0; }
+.center-area.is-active .title-wrapper { opacity: 0; pointer-events: none; } /* 설명창 열리면 타이틀+툴팁 숨김 */
 .center-area.is-active .description-box { opacity: 1; visibility: visible; transform: scale(1); }
 
 #brandTitle {
@@ -214,22 +288,19 @@ body {
     text-transform: uppercase;
 }
 
-/* [2번 요청 해결] 본문 텍스트 폰트 굵기 조정 (기존보다 얇게) */
 .story-content {
     font-size: 1em;
     line-height: 1.6;
     overflow-y: auto;
     flex-grow: 1;
-    font-weight: 400; /* 기존(상속값)보다 얇게 설정 (Regular) */
+    font-weight: 400; 
 }
 
-/* [1번 요청 해결] Next 버튼 스타일 */
 .next-button {
     position: absolute;
-    bottom: 30px; /* rainbow-bar 위쪽 여백 */
+    bottom: 30px; 
     left: 50%;
     transform: translateX(-50%);
-    
     font-size: 1rem;
     font-weight: 700;
     color: #000;
@@ -240,39 +311,20 @@ body {
     border-radius: 30px;
     z-index: 100;
     transition: all 0.3s ease;
-    
-    /* 폰트 */
     font-family: 'Gothic A1', sans-serif;
+    
+    /* 인트로 때 숨겼다가 나타나게 하려면 아래 속성 추가 */
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+    animation-delay: 3s; /* 모든 박스 등장 후 나타남 */
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
 }
 
 .next-button:hover {
     background-color: #000;
     color: #fff;
     cursor: pointer;
-}
-
-/* --- 파동(Ripple) 효과 --- */
-
-/* 파동이 박스 밖으로 넘치지 않게 하기 위해 필수 */
-.brand-item {
-    position: relative; /* 이미 있을 수 있지만, 확실하게 한 번 더 명시 */
-    overflow: hidden;   /* 파동이 네모 박스 밖으로 나가지 않도록 자름 */
-}
-
-/* 파동 그 자체의 모양과 움직임 */
-.ripple {
-    position: absolute;
-    border-radius: 50%; /* 원형 */
-    transform: scale(0); /* 처음엔 크기 0에서 시작 */
-    animation: ripple-anim 0.6s linear; /* 0.6초 동안 애니메이션 */
-    pointer-events: none; /* 파동이 마우스 클릭을 방해하지 않게 함 */
-    opacity: 0.6; /* 약간 투명하게 시작 */
-}
-
-/* 파동이 커지면서 사라지는 애니메이션 */
-@keyframes ripple-anim {
-    to {
-        transform: scale(4); /* 원래 크기의 4배로 커짐 */
-        opacity: 0;          /* 투명해지면서 사라짐 */
-    }
 }
