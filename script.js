@@ -356,7 +356,8 @@ function createBrandBox(brand) {
     });
 }
 
-// 설명창 내용 업데이트 함수
+// script.js (updateDescription 함수만 수정)
+
 function updateDescription(brand) {
     brandTitle.innerHTML = `${brand.name}`;
     
@@ -374,7 +375,7 @@ function updateDescription(brand) {
             <p class="story-text" style="margin-top: 10px;">${brand.story.old}</p>
         </div>
 
-        <div class="story-section" style="margin-top: 30px; padding-top: 20px; border-top: 1px dashed #ccc;">
+        <div class="story-section">
             <span class="story-label">New Identity</span>
             <div class="color-chip-container">
                 <div class="color-chip" style="background-color: ${brand.newColor};"></div>
